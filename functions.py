@@ -2,6 +2,16 @@ import pygame
 import requests
 
 
+
+def painting(mas, coo_x, coo_y):
+    map_request = f"http://static-maps.yandex.ru/1.x/?ll={float(coo_x)},{float(coo_y)}&spn={5 * (1 / float(mas[:-1]))},{5 * (1 / float(mas[:-1]))}&l=map"
+    response = requests.get(map_request)
+
+    if response:
+        map_file = "map.png"
+        with open(map_file, "wb") as file:
+            file.write(response.content)
+
 def detect(pos, d, mas, coo_x, coo_y):
     if (190 <= int(pos[0]) <= 490):
         if (460 <= int(pos[1]) <= 485):
@@ -112,26 +122,26 @@ def deistv(event, d, mas, coo_x, coo_y):
                 mas = str(float(mas[:-1]) + 20) + "%"
             else:
                 mas = str(int(mas[:-1]) + 20) + "%"
-            map_request = f"http://static-maps.yandex.ru/1.x/?ll={float(coo_x)},{float(coo_y)}&spn={5 * (1 / float(mas[:-1]))},{5 * (1 / float(mas[:-1]))}&l=map"
-            response = requests.get(map_request)
-
-            if response:
-                map_file = "map.png"
-                with open(map_file, "wb") as file:
-                    file.write(response.content)
+            painting(mas, coo_x, coo_y)
         if event.key == 1073741902:
             if float(mas[:-1]) >= 21:
                 if '.' in mas:
                     mas = str(float(mas[:-1]) - 20) + "%"
                 else:
                     mas = str(int(mas[:-1]) - 20) + "%"
-            map_request = f"http://static-maps.yandex.ru/1.x/?ll={float(coo_x)},{float(coo_y)}&spn={5 * (1 / float(mas[:-1]))},{5 * (1 / float(mas[:-1]))}&l=map"
-            response = requests.get(map_request)
-
-            if response:
-                map_file = "map.png"
-                with open(map_file, "wb") as file:
-                    file.write(response.content)
+            painting(mas, coo_x, coo_y)
+        if event.key == pygame.K_LEFT:
+            coo_x = str(float(coo_x) - 0.01)
+            painting(mas, coo_x, coo_y)
+        if event.key == pygame.K_RIGHT:
+            coo_x = str(float(coo_x) + 0.01)
+            painting(mas, coo_x, coo_y)
+        if event.key == pygame.K_UP:
+            coo_y = str(float(coo_y) + 0.01)
+            painting(mas, coo_x, coo_y)
+        if event.key == pygame.K_DOWN:
+            coo_y = str(float(coo_y) - 0.01)
+            painting(mas, coo_x, coo_y)
     return mas, coo_x, coo_y
 
 
